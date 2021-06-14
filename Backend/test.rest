@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Eliminar una calificacion
-DELETE  http://localhost:3001/calificaciones/60c6a69dd64b7c3e087c7c32
+DELETE  http://localhost:3001/calificaciones/2014090560
 
 ###
 PATCH  http://localhost:3001/calificaciones/60c656738ca3b03be4ed0f6a

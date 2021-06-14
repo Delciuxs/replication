@@ -88,8 +88,8 @@ router.delete("/:id", getCalificacion, async (req, res) => {
 async function getCalificacion(req, res, next) {
   let calificacion;
   try {
-    calificacion = await Calificacion.findById(req.params.id);
-    if (calificacion == null) {
+    calificacion = await Calificacion.find({ noBoleta: req.params.id });
+    if (calificacion[0] == null) {
       return res.status(404).json({
         message: "No se encontro esa calificacion",
       });
@@ -99,7 +99,7 @@ async function getCalificacion(req, res, next) {
       message: error.message,
     });
   }
-  res.calificacion = calificacion;
+  res.calificacion = calificacion[0];
   next();
 }
 

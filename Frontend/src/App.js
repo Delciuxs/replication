@@ -6,7 +6,6 @@ import Calificaciones from "./Calificaciones";
 import Formulario from "./Formulario";
 
 export const DEFAULT_DATA_FORMULARIO = {
-  id: "",
   noBoleta: "",
   nombre: "",
   apellidos: "",

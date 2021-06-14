@@ -88,7 +88,7 @@ const Formulario = ({
       calif3 !== "" &&
       califTotal !== ""
     ) {
-      if (data.id === "") {
+      if (data.noBoleta === "") {
         POSTCalificacion({
           noBoleta: noBoleta,
           nombre: nombre,
@@ -100,7 +100,7 @@ const Formulario = ({
           fechaModificacion: Date.now(),
         });
       } else {
-        PATCHCalificacion(data.id, {
+        PATCHCalificacion(data.noBoleta, {
           noBoleta: noBoleta,
           nombre: nombre,
           apellidos: apellidos,
@@ -117,7 +117,7 @@ const Formulario = ({
 
   return (
     <div className="formulario">
-      {data.id === "" ? <h1>Nueva Entrada</h1> : <h1>Modificando Entrada</h1>}
+      {data.noBoleta === "" ? <h1>Nueva Entrada</h1> : <h1>Modificando Entrada</h1>}
       <form onSubmit={handleSubmit} className="form-content">
         <div className="input-form">
           <label htmlFor="noBoleta">No Boleta </label>

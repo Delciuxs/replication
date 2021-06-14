@@ -8,7 +8,6 @@ const FilaCalificaciones = ({
 }) => {
   const modificaCalificacion = () => {
     setDataFormulario({
-      id: calificacion._id,
       noBoleta: calificacion.noBoleta,
       nombre: calificacion.nombre,
       apellidos: calificacion.apellidos,
@@ -20,8 +19,8 @@ const FilaCalificaciones = ({
     showFormulario(true);
   };
 
-  const borraCalificacion = async () => {
-    await fetch(`http://localhost:3001/calificaciones/${calificacion._id}`, {
+  const DELETECalificacion = async () => {
+    await fetch(`http://localhost:3001/calificaciones/${calificacion.noBoleta}`, {
       method: "DELETE",
     });
     let response = await fetch("http://localhost:3001/calificaciones");
@@ -35,7 +34,7 @@ const FilaCalificaciones = ({
         <i
           id="delete"
           className="fas fa-trash-alt"
-          onClick={() => borraCalificacion()}
+          onClick={() => DELETECalificacion()}
         ></i>
         <i
           id="edit"

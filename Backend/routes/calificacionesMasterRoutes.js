@@ -90,6 +90,27 @@ router.patch("/:id", getCalificacion, async (req, res) => {
   try {
     const updatedCalificacion = await res.calificacion.save();
     res.json(updatedCalificacion);
+    //=======================================================
+    //REPLICANDO
+    //=======================================================
+
+    //Servidor esclavo 1
+    await fetch(`http://localhost:3002/calificaciones/${res.calificacion.noBoleta}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCalificacion),
+    });
+    //Servidor esclavo 2
+    await fetch(`http://localhost:3003/calificaciones/${res.calificacion.noBoleta}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCalificacion),
+    });
+    //=======================================================
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -102,6 +123,25 @@ router.delete("/:id", getCalificacion, async (req, res) => {
     res.json({
       message: "Calificacion eliminada",
     });
+    //=======================================================
+    //REPLICANDO
+    //=======================================================
+
+    //Servidor esclavo 1
+    await fetch(
+      `http://localhost:3002/calificaciones/${res.calificacion.noBoleta}`,
+      {
+        method: "DELETE",
+      }
+    );
+    //Servidor esclavo 2
+    await fetch(
+      `http://localhost:3003/calificaciones/${res.calificacion.noBoleta}`,
+      {
+        method: "DELETE",
+      }
+    );
+    //=======================================================
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -112,8 +152,8 @@ router.delete("/:id", getCalificacion, async (req, res) => {
 async function getCalificacion(req, res, next) {
   let calificacion;
   try {
-    calificacion = await Calificacion.findById(req.params.id);
-    if (calificacion == null) {
+    calificacion = await Calificacion.find({ noBoleta: req.params.id });
+    if (calificacion[0] == null) {
       return res.status(404).json({
         message: "No se encontro esa calificacion",
       });
@@ -123,7 +163,7 @@ async function getCalificacion(req, res, next) {
       message: error.message,
     });
   }
-  res.calificacion = calificacion;
+  res.calificacion = calificacion[0];
   next();
 }
 
