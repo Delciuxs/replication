@@ -127,6 +127,7 @@ const Formulario = ({
             name="noBoleta"
             defaultValue={data.noBoleta}
             ref={noBoletaRef}
+            disabled={data.noBoleta !== "" ? true : false}
           />
         </div>
         <div className="input-form">
