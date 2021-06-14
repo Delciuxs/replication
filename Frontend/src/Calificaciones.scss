@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h1 {
+    text-align: center;
+    margin: 1rem;
+  }
+
+  button {
+    background-color: steelblue;
+    color: white;
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}

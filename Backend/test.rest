@@ -1,0 +1,30 @@
+### Obtener todas las calificaciones
+GET http://localhost:3001/calificaciones
+
+### Obtener una calificacion en específico
+GET http://localhost:3001/calificaciones/60c6574ae8f15a2eec7bd248
+
+### Crear una calificacion
+POST http://localhost:3001/calificaciones
+Content-Type: application/json
+
+{
+    "noBoleta": "2014090550",
+    "nombre": "Jose Manuel",
+    "apellidos": "Calva Henandez",
+    "calif1": "9",
+    "calif2": "9",
+    "calif3": "10",
+    "califTotal": "9"
+}
+
+### Eliminar una calificacion
+DELETE  http://localhost:3001/calificaciones/60c6a69dd64b7c3e087c7c32
+
+###
+PATCH  http://localhost:3001/calificaciones/60c656738ca3b03be4ed0f6a
+Content-Type: application/json
+
+{
+    "calif2": "10"
+}
