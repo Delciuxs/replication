@@ -22,7 +22,7 @@ if(ipMaestro == undefined && puertoMaestro == undefined){
 }
 else{
   conectarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor);
-  setTimeout(() => monitorizarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor), 1000);
+  setTimeout(() => hagi(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor), 1000);
 }
 
 const calificacionesRouter = require("./routes/calificacionesRoutes");

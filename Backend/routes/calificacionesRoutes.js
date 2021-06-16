@@ -3,6 +3,24 @@ const fetch = require("node-fetch");
 const router = express.Router();
 const Calificacion = require("../model/calificacionesModel");
 
+async function getMasterAndSlaveServers(port) {
+  let servers = null;
+
+  try {
+    const url = `http://localhost:${port}/servidores`;
+    const responseGetServers = await fetch(url);
+    servers = await responseGetServers.json();
+  } catch (error) {
+    console.log("Cant get servers table");
+    console.log(error);
+  }
+
+  const servidorMaster = servers.filter((servidor) => servidor.maestro)[0];
+  const servidoresEsclavo = servers.filter((servidor) => !servidor.maestro);
+
+  return [servidorMaster, servidoresEsclavo];
+}
+
 //Obtener todas las calificaciones
 router.get("/", async (req, res) => {
   try {
@@ -39,22 +57,33 @@ router.post("/", async (req, res) => {
     //REPLICANDO
     //=======================================================
 
-    //Servidor esclavo 1
-    await fetch("http://localhost:3002/calificaciones", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    //Servidor esclavo 2
-    await fetch("http://localhost:3003/calificaciones", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const host = req.headers.host.split(":");
+    servers = await getMasterAndSlaveServers(host[1]);
+
+    const servidorMaster = servers[0];
+    const servidoresEsclavo = servers[1];
+
+    if (host[0] == servidorMaster.ip && host[1] == servidorMaster.puerto) {
+      for (let servidorEsclavo of servidoresEsclavo) {
+        let urlPost = `http://${servidorEsclavo.ip}:${servidorEsclavo.puerto}/calificaciones`;
+        try {
+          await fetch(urlPost, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(calificacion),
+          });
+        } catch (error) {
+          console.log(
+            "Cant replicate POST to port" +
+              servidoresEsclavo[servidorEsclavoIndex].puerto
+          );
+          console.log(error);
+        }
+      }
+    }
+
     //=======================================================
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -94,22 +123,32 @@ router.patch("/:id", getCalificacion, async (req, res) => {
     //REPLICANDO
     //=======================================================
 
-    //Servidor esclavo 1
-    await fetch(`http://localhost:3002/calificaciones/${res.calificacion.noBoleta}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedCalificacion),
-    });
-    //Servidor esclavo 2
-    await fetch(`http://localhost:3003/calificaciones/${res.calificacion.noBoleta}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedCalificacion),
-    });
+    const host = req.headers.host.split(":");
+    servers = await getMasterAndSlaveServers(host[1]);
+
+    const servidorMaster = servers[0];
+    const servidoresEsclavo = servers[1];
+
+    if (host[0] == servidorMaster.ip && host[1] == servidorMaster.puerto) {
+      for (let servidorEsclavo of servidoresEsclavo) {
+        let urlPatch = `http://${servidorEsclavo.ip}:${servidorEsclavo.puerto}/calificaciones/${res.calificacion.noBoleta}`;
+        try {
+          await fetch(urlPatch, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedCalificacion),
+          });
+        } catch (error) {
+          console.log(
+            "Cant replicate PATCH to port" +
+              servidoresEsclavo[servidorEsclavoIndex].puerto
+          );
+          console.log(error);
+        }
+      }
+    }
     //=======================================================
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -127,20 +166,28 @@ router.delete("/:id", getCalificacion, async (req, res) => {
     //REPLICANDO
     //=======================================================
 
-    //Servidor esclavo 1
-    await fetch(
-      `http://localhost:3002/calificaciones/${res.calificacion.noBoleta}`,
-      {
-        method: "DELETE",
+    const host = req.headers.host.split(":");
+    servers = await getMasterAndSlaveServers(host[1]);
+
+    const servidorMaster = servers[0];
+    const servidoresEsclavo = servers[1];
+
+    if (host[0] == servidorMaster.ip && host[1] == servidorMaster.puerto) {
+      for (let servidorEsclavo of servidoresEsclavo) {
+        let urlDelete = `http://${servidorEsclavo.ip}:${servidorEsclavo.puerto}/calificaciones/${res.calificacion.noBoleta}`;
+        try {
+          await fetch(urlDelete, {
+            method: "DELETE",
+          });
+        } catch (error) {
+          console.log(
+            "Cant replicate DELETE to port" +
+              servidoresEsclavo[servidorEsclavoIndex].puerto
+          );
+          console.log(error);
+        }
       }
-    );
-    //Servidor esclavo 2
-    await fetch(
-      `http://localhost:3003/calificaciones/${res.calificacion.noBoleta}`,
-      {
-        method: "DELETE",
-      }
-    );
+    }
     //=======================================================
   } catch (error) {
     res.status(500).json({
