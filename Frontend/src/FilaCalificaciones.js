@@ -20,10 +20,10 @@ const FilaCalificaciones = ({
   };
 
   const DELETECalificacion = async () => {
-    await fetch(`http://localhost:3001/calificaciones/${calificacion.noBoleta}`, {
+    await fetch(`http://localhost:5000/calificaciones/${calificacion.noBoleta}`, {
       method: "DELETE",
     });
-    let response = await fetch("http://localhost:3001/calificaciones");
+    let response = await fetch("http://localhost:5000/calificaciones");
     let data = await response.json();
     setCalificaciones(data);
   };

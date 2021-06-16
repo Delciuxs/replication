@@ -26,13 +26,6 @@ else{
   conectarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor);
 }
 
-console.log(ipServidor);
-console.log(puertoServidor);
-console.log(parseInt(puertoServidor));
-console.log(prioridadServidor);
-console.log(ipMaestro);
-console.log(puertoMaestro);
-
 const calificacionesRouter = require("./routes/calificacionesRoutes");
 app.use("/calificaciones", calificacionesRouter);
 const servidoresRouter = require("./routes/servidoresRoutes");

@@ -45,27 +45,27 @@ const Formulario = ({
   };
 
   const POSTCalificacion = async (data) => {
-    await fetch("http://localhost:3001/calificaciones", {
+    await fetch("http://localhost:5000/calificaciones", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    let response = await fetch("http://localhost:3001/calificaciones");
+    let response = await fetch("http://localhost:5000/calificaciones");
     let calificaciones = await response.json();
     setCalificaciones(calificaciones);
   };
 
   const PATCHCalificacion = async (id, data) => {
-    await fetch(`http://localhost:3001/calificaciones/${id}`, {
+    await fetch(`http://localhost:5000/calificaciones/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    let response = await fetch("http://localhost:3001/calificaciones");
+    let response = await fetch("http://localhost:5000/calificaciones");
     let calificaciones = await response.json();
     setCalificaciones(calificaciones);
   };
