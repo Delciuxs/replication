@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "./App.scss";
 
 import ServerContext from './provider/ServerContext';
