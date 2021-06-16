@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 
-const FilaCalificaciones = ({
-  calificacion,
-  setDataFormulario,
-  showFormulario,
-  setCalificaciones,
-}) => {
+import ServerContext from './provider/ServerContext';
+
+const FilaCalificaciones = ({ calificacion }) => {
+  const context = useContext(ServerContext);
+
   const modificaCalificacion = () => {
-    setDataFormulario({
+    context.dataFormulario({
       noBoleta: calificacion.noBoleta,
       nombre: calificacion.nombre,
       apellidos: calificacion.apellidos,
@@ -16,16 +15,7 @@ const FilaCalificaciones = ({
       calif3: calificacion.calif3,
       califTotal: calificacion.califTotal,
     });
-    showFormulario(true);
-  };
-
-  const DELETECalificacion = async () => {
-    await fetch(`http://localhost:5000/calificaciones/${calificacion.noBoleta}`, {
-      method: "DELETE",
-    });
-    let response = await fetch("http://localhost:5000/calificaciones");
-    let data = await response.json();
-    setCalificaciones(data);
+    context.showFormulario(true);
   };
 
   return (
@@ -34,7 +24,7 @@ const FilaCalificaciones = ({
         <i
           id="delete"
           className="fas fa-trash-alt"
-          onClick={() => DELETECalificacion()}
+          onClick={() => context.DELETECalificacion(calificacion.noBoleta)}
         ></i>
         <i
           id="edit"

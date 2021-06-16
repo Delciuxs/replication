@@ -1,20 +1,18 @@
 import React from "react";
-import { useRef } from "react";
+import { useRef, useContext } from "react";
+
+import ServerContext from './provider/ServerContext';
 
 import "./Formulario.scss";
-import { DEFAULT_DATA_FORMULARIO } from "./App";
 
 function isNumeric(str) {
   if (typeof str != "string") return false;
   return !isNaN(str) && !isNaN(parseFloat(str));
 }
 
-const Formulario = ({
-  data,
-  showFormulario,
-  dataFormulario,
-  setCalificaciones,
-}) => {
+const Formulario = () => {
+  const context = useContext(ServerContext);
+
   const noBoletaRef = useRef();
   const nombreRef = useRef();
   const apellidosRef = useRef();
@@ -28,8 +26,8 @@ const Formulario = ({
   };
 
   const hideForm = () => {
-    showFormulario(false);
-    dataFormulario(DEFAULT_DATA_FORMULARIO);
+    context.showFormulario(false);
+    context.dataFormulario(context.default_data);
   };
 
   const calcCalifTotal = () => {
@@ -42,32 +40,6 @@ const Formulario = ({
       );
       califTotalRef.current.value = califTotal;
     }
-  };
-
-  const POSTCalificacion = async (data) => {
-    await fetch("http://localhost:5000/calificaciones", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    let response = await fetch("http://localhost:5000/calificaciones");
-    let calificaciones = await response.json();
-    setCalificaciones(calificaciones);
-  };
-
-  const PATCHCalificacion = async (id, data) => {
-    await fetch(`http://localhost:5000/calificaciones/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    let response = await fetch("http://localhost:5000/calificaciones");
-    let calificaciones = await response.json();
-    setCalificaciones(calificaciones);
   };
 
   const save = () => {
@@ -88,8 +60,8 @@ const Formulario = ({
       calif3 !== "" &&
       califTotal !== ""
     ) {
-      if (data.noBoleta === "") {
-        POSTCalificacion({
+      if (context.data.noBoleta === "") {
+        context.POSTCalificacion({
           noBoleta: noBoleta,
           nombre: nombre,
           apellidos: apellidos,
@@ -100,7 +72,7 @@ const Formulario = ({
           fechaModificacion: Date.now(),
         });
       } else {
-        PATCHCalificacion(data.noBoleta, {
+        context.PATCHCalificacion(context.data.noBoleta, {
           noBoleta: noBoleta,
           nombre: nombre,
           apellidos: apellidos,
@@ -117,7 +89,7 @@ const Formulario = ({
 
   return (
     <div className="formulario">
-      {data.noBoleta === "" ? <h1>Nueva Entrada</h1> : <h1>Modificando Entrada</h1>}
+      {context.data.noBoleta === "" ? <h1>Nueva Entrada</h1> : <h1>Modificando Entrada</h1>}
       <form onSubmit={handleSubmit} className="form-content">
         <div className="input-form">
           <label htmlFor="noBoleta">No Boleta </label>
@@ -125,9 +97,9 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="noBoleta"
-            defaultValue={data.noBoleta}
+            defaultValue={context.data.noBoleta}
             ref={noBoletaRef}
-            disabled={data.noBoleta !== "" ? true : false}
+            disabled={context.data.noBoleta !== "" ? true : false}
           />
         </div>
         <div className="input-form">
@@ -136,7 +108,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="nombre"
-            defaultValue={data.nombre}
+            defaultValue={context.data.nombre}
             ref={nombreRef}
           />
         </div>
@@ -146,7 +118,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="apellidos"
-            defaultValue={data.apellidos}
+            defaultValue={context.data.apellidos}
             ref={apellidosRef}
           />
         </div>
@@ -156,7 +128,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="calif1"
-            defaultValue={data.calif1}
+            defaultValue={context.data.calif1}
             ref={calif1Ref}
             onChange={() => calcCalifTotal()}
           />
@@ -167,7 +139,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="calif2"
-            defaultValue={data.calif2}
+            defaultValue={context.data.calif2}
             ref={calif2Ref}
             onChange={() => calcCalifTotal()}
           />
@@ -178,7 +150,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="calif3"
-            defaultValue={data.calif3}
+            defaultValue={context.data.calif3}
             ref={calif3Ref}
             onChange={() => calcCalifTotal()}
           />
@@ -189,7 +161,7 @@ const Formulario = ({
             autoComplete="off"
             type="text"
             name="califTotal"
-            defaultValue={data.califTotal}
+            defaultValue={context.data.califTotal}
             ref={califTotalRef}
             disabled={true}
           />

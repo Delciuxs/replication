@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import ServerContext from './provider/ServerContext';
 
 import "./TablaCalificaciones.scss";
 import FilaCalificaciones from "./FilaCalificaciones";
 
-const TablaCalificaciones = ({
-  calificaciones,
-  setDataFormulario,
-  showFormulario,
-  setCalificaciones,
-}) => {
+const TablaCalificaciones = () => {
+  const context = useContext(ServerContext);
+
   return (
     <table>
       <tbody>
@@ -22,14 +21,11 @@ const TablaCalificaciones = ({
           <th>Calificacion 3</th>
           <th>Total</th>
         </tr>
-        {calificaciones &&
-          calificaciones.map((calificacion, index) => (
+        {context.calificaciones &&
+          context.calificaciones.map((calificacion, index) => (
             <FilaCalificaciones
               key={index}
               calificacion={calificacion}
-              setDataFormulario={setDataFormulario}
-              showFormulario={showFormulario}
-              setCalificaciones={setCalificaciones}
             />
           ))}
       </tbody>
