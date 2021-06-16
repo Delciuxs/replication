@@ -22,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchCalificaciones = async () => {
-      let url = "http://localhost:3001/calificaciones";
+      let url = "http://localhost:5000/calificaciones";
       let response = await fetch(url);
       let data = await response.json();
       setCalificaciones(data);

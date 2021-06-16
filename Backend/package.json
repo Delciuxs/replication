@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon masterServer.js slaveServer1.js slaveServer2.js",
-    "masterServer": "nodemon masterServer.js",
-    "slaveServer1": "nodemon slaveServer1.js",
-    "slaveServer2": "nodemon slaveServer2.js"
+    "start": "nodemon servidor.js"
   },
   "author": "",
   "license": "ISC",
