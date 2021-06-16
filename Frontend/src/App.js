@@ -5,6 +5,7 @@ import ServerContext from './provider/ServerContext';
 
 import Calificaciones from "./Calificaciones";
 import Formulario from "./Formulario";
+import Servidores from "./Servidores";
 
 const App = () => {
   const context = useContext(ServerContext);
@@ -12,7 +13,7 @@ const App = () => {
   useEffect(() => {
     context.fetchServerList();
     context.fetchCalificaciones();
-  }, [context.masterServer]);
+  }, []);
 
   return (
     <div className="content">
@@ -21,6 +22,8 @@ const App = () => {
       ) : (
         <Calificaciones/>
       )}
+      <hr/>
+      <Servidores/>
     </div>
   );
 };

@@ -1,0 +1,31 @@
+.lista-servidores {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      text-align: center;
+      margin: 1rem;
+    }
+
+    button {
+      color: black;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: initial;
+
+      i {
+        color: white;
+      }
+    }
+
+    .text {
+      background-color: #78e39a !important;
+    }
+
+    .button {
+      background-color: steelblue !important;
+    }
+  }
+}
