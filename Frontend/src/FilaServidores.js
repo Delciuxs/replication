@@ -5,6 +5,7 @@ const FilaServidores = ({ server }) => {
     <tr className={server.maestro ? "master-row" : "slave-row"}>
       <td>{server.ip}</td>
       <td>{server.puerto}</td>
+      <td>{server.prioridad}</td>
       <td>
         <i
           id="status"

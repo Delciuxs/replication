@@ -14,6 +14,7 @@ const TablaServidores = () => {
         <tr>
           <th>Dirección</th>
           <th>Puerto</th>
+          <th>Prioridad</th>
           <th>Estado</th>
         </tr>
         {context.serversList &&
