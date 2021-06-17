@@ -1,0 +1,1 @@
+DELETE  http://localhost:5002/calificaciones/0
