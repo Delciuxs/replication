@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     if(host[0] == servidorMaster.ip && host[1] == servidorMaster.puerto && req.query != undefined){
       const { ip, puerto, prioridad } = req.query;
       if(ip != undefined && puerto != undefined && prioridad != undefined){
-        //const servidoresCaidos = [];
+        const servidoresCaidos = [];
         var nuevoServidor = new Servidor({ip, puerto, prioridad, maestro: false});
         nuevoServidor = await nuevoServidor.save();
         const servidoresActualizados = [...servidores];
@@ -28,15 +28,21 @@ router.get("/", async (req, res) => {
           }).catch(error => servidoresCaidos.push(servidoresEsclavos[servidorEsclavoIndex]));
         }
         if(servidoresCaidos.length > 0){
-          /*const servidoresActivos = servidoresActualizados.filter(servidor => !servidor.maestro && !servidoresCaidos.includes(servidor));
+          console.log("servidores caidos contiene: " + servidores.filter(servidor => !servidoresCaidos.includes(servidor)));
+          const servidoresActivos = servidores.filter(servidor => !servidor.maestro && !servidoresCaidos.includes(servidor));
           for(var servidorCaidoIndex in servidoresCaidos){
             const servidorCaido = servidoresCaidos[servidorCaidoIndex];
-            Servidor.remove(servidorCaido,(err) => console.log("Servidor caido removido"));
+            Servidor.deleteOne(servidorCaido,(err) => console.log("Servidor caido removido"));
             for(var servidorActivoIndex in servidoresActivos){
               const servidorActivo = servidoresActivos[servidorActivoIndex];
-
+              await fetch("http://" + servidorActivo.ip + ":" + servidorActivo.puerto + "/servidores/" + servidorCaido._id, {
+                method: "DELETE",
+              }).then(response => {if(response.status != 201) console.log("Error al remover servidor caido " + servidorCaido.ip + ":" + servidorCaido.puerto + " del servidor " + servidorActivo.ip + ":" + servidorActivo.puerto,response);})
+              .catch(error => console.log("Error al remover servidor caido " + servidorCaido.ip + ":" + servidorCaido.puerto + " del servidor " + servidorActivo.ip + ":" + servidorActivo.puerto,error));
             }
-          }*/
+          }
+          res.json(servidores.filter(servidor => !servidoresCaidos.includes(servidor)));
+          return;
         }
       }
     }
@@ -73,6 +79,18 @@ router.post("/coordinar", async (req, res) => {
       const servidor = new Servidor(req.body[index]);
       await servidor.save();
     }
+    res.status(201).json(servidor);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    console.log("removiendo servidor caido " + req.params.id);
+    const servidor = await Servidor.findById(req.params.id);
+    console.log("removiendo servidor caido",servidor);
+    await Servidor.deleteOne(servidor,error => "Servidor caido removido");
     res.status(201).json(servidor);
   } catch (error) {
     res.status(400).json({ message: error.message });

@@ -62,7 +62,7 @@ async function conectarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaes
       await servidor.save();
     } 
   }).catch(error => {
-    console.log("Error conectando al maestro, suicidandome");
+    console.log("Error conectando al maestro, suicidandome",error);
     process.exit(1);
   });
 }
