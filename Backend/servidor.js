@@ -3,6 +3,7 @@ var cors = require("cors");
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 const Servidor = require("./model/servidoresModel");
+const Calificacion = require("./model/calificacionesModel");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -15,14 +16,14 @@ const puertoMaestro = process.argv[7];
 
 conectarBaseDeDatos(ipServidor, puertoServidor);
 Servidor.deleteMany({}, function(err) { 
-  console.log('collection removed') 
+  console.log('Servidores limpiados') 
 });
 if(ipMaestro == undefined && puertoMaestro == undefined){
   iniciarMaestro(ipServidor, puertoServidor, prioridadServidor);
 }
 else{
   conectarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor);
-  setTimeout(() => hagi(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor), 1000);
+  setTimeout(() => monitorizarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaestro, prioridadServidor), 1000);
 }
 
 const calificacionesRouter = require("./routes/calificacionesRoutes");
@@ -60,6 +61,19 @@ async function conectarMaestro(ipServidor, puertoServidor, ipMaestro, puertoMaes
     for(var datosServidorIndex in datosServidores){
       const servidor = new Servidor(datosServidores[datosServidorIndex]);
       await servidor.save();
+    } 
+  }).catch(error => {
+    console.log("Error conectando al maestro, suicidandome",error);
+    process.exit(1);
+  });
+  await Calificacion.deleteMany({},() => console.log('Calificaciones limpiadas'));
+  fetch("http://" + ipMaestro + ":" + puertoMaestro + "/calificaciones")
+  .then(response => response.json())
+  .then(async calificaciones => {
+    for(let calificacion of calificaciones){
+      console.log(calificacion);
+      const nuevaCalificacion = new Calificacion(calificacion);
+      await nuevaCalificacion.save();
     } 
   }).catch(error => {
     console.log("Error conectando al maestro, suicidandome",error);
